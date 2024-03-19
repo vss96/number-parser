@@ -1,11 +1,12 @@
 mod parser;
 
-use crate::parser::{Digit, DigitParser, Many0, MapCombinator, ParseResult, Parser};
+use crate::parser::{AndOperator, Digit, DigitParser, Many0, MapOperator, ParseResult, Parser};
 
 fn main() {
     let val = String::from("1234");
     let digit_parser = DigitParser::default().map(|d| Digit::from(d));
-    let many1_digit_parser = (digit_parser.clone(), Many0::new(digit_parser));
+    let many0_digit_parser = Many0::new(DigitParser::default().map(|d| Digit::from(d)));
+    let many1_digit_parser = digit_parser.and(many0_digit_parser);
     let digits_parser =
         many1_digit_parser.map(|(p, v)| vec![p].into_iter().chain(v).collect::<Vec<Digit>>());
 

@@ -16,9 +16,9 @@ mod many;
 mod map;
 mod or;
 mod token;
-mod combinator;
+mod operator;
 
 pub use digit::{Digit, DigitParser};
 pub use many::Many0;
 pub use map::MapParser;
-pub use combinator::{AndCombinator, MapCombinator, OrCombinator};
+pub use operator::{AndOperator, MapOperator, OrOperator};

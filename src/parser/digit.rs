@@ -8,7 +8,8 @@
 use super::or::OrParser;
 use super::token::TokenParser;
 use super::Either;
-use super::OrCombinator;
+use super::OrOperator;
+use super::Parser;
 
 
 pub type DigitParser = OrParser<
@@ -50,8 +51,8 @@ pub type DigitParserReturnType = Either<
     String,
 >;
 
-impl Default for DigitParser {
-    fn default() -> Self {
+impl DigitParser {
+    pub fn default() -> impl Parser<DigitParserReturnType> {
         let zero = TokenParser::new("0".to_string());
         let one = TokenParser::new("1".to_string());
         let two = TokenParser::new("2".to_string());

@@ -1,5 +1,3 @@
-
-
 use super::{ParseResult, Parser};
 
 pub struct Many0<T>(T);
@@ -31,8 +29,6 @@ impl<T> Many0<T> {
         Self(t)
     }
 }
-
-
 
 #[cfg(test)]
 mod test_many0 {
@@ -83,7 +79,8 @@ mod test_many1 {
     fn should_have_atleast_one_digit() {
         let val = String::from("1abc");
         let digit_parser = DigitParser::default();
-        let res = (digit_parser.clone(), Many0::new(digit_parser)).parse_from(&val);
+        let many0_digit_parser = Many0::new(DigitParser::default());
+        let res = (digit_parser, many0_digit_parser).parse_from(&val);
         let digits = res.map(|((p, v), follow)| {
             (
                 vec![p]
@@ -102,7 +99,8 @@ mod test_many1 {
     fn should_err_if_no_digits_found() {
         let val = String::from("abc");
         let digit_parser = DigitParser::default();
-        let res = (digit_parser.clone(), Many0::new(digit_parser)).parse_from(&val);
+        let many0_digit_parser = Many0::new(DigitParser::default());
+        let res = (digit_parser, many0_digit_parser).parse_from(&val);
 
         assert_eq!(
             Err(String::from("Could not find token: 9")), //last token is 9
