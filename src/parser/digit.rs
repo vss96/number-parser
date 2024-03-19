@@ -1,44 +1,53 @@
-use crate::parser::or::Or10;
 
-use super::or::Or2;
-use super::or::Or3;
-use super::or::Or4;
-use super::or::Or5;
-use super::or::Or6;
-use super::or::Or7;
-use super::or::Or8;
-use super::or::Or9;
 
+
+
+
+
+
+use super::or::OrParser;
 use super::token::TokenParser;
 use super::Either;
+use super::OrCombinator;
 
-pub type DigitParser = Or10<
-    TokenParser,
-    TokenParser,
-    TokenParser,
-    TokenParser,
-    TokenParser,
-    TokenParser,
-    TokenParser,
-    TokenParser,
-    TokenParser,
+
+pub type DigitParser = OrParser<
+    OrParser<
+        OrParser<
+            OrParser<
+                OrParser<
+                    OrParser<
+                        OrParser<
+                            OrParser<OrParser<TokenParser, TokenParser>, TokenParser>,
+                            TokenParser,
+                        >,
+                        TokenParser,
+                    >,
+                    TokenParser,
+                >,
+                TokenParser,
+            >,
+            TokenParser,
+        >,
+        TokenParser,
+    >,
     TokenParser,
 >;
 pub type DigitParserReturnType = Either<
-    String,
     Either<
-        String,
         Either<
-            String,
             Either<
-                String,
                 Either<
+                    Either<Either<Either<Either<String, String>, String>, String>, String>,
                     String,
-                    Either<String, Either<String, Either<String, Either<String, String>>>>,
                 >,
+                String,
             >,
+            String,
         >,
+        String,
     >,
+    String,
 >;
 
 impl Default for DigitParser {
@@ -53,22 +62,15 @@ impl Default for DigitParser {
         let seven = TokenParser::new("7".to_string());
         let eight = TokenParser::new("8".to_string());
         let nine = TokenParser::new("9".to_string());
-        Or10::new(
-            zero,
-            Or9::new(
-                one,
-                Or8::new(
-                    two,
-                    Or7::new(
-                        three,
-                        Or6::new(
-                            four,
-                            Or5::new(five, Or4::new(six, Or3::new(seven, Or2::new(eight, nine)))),
-                        ),
-                    ),
-                ),
-            ),
-        )
+        zero.or(one)
+            .or(two)
+            .or(three)
+            .or(four)
+            .or(five)
+            .or(six)
+            .or(seven)
+            .or(eight)
+            .or(nine)
     }
 }
 
@@ -89,28 +91,26 @@ pub enum Digit {
 impl From<DigitParserReturnType> for Digit {
     fn from(value: DigitParserReturnType) -> Self {
         match value {
-            Either::Left(_) => Digit::Zero,
-            Either::Right(Either::Left(_)) => Digit::One,
-            Either::Right(Either::Right(Either::Left(_))) => Digit::Two,
-            Either::Right(Either::Right(Either::Right(Either::Left(_)))) => Digit::Three,
-            Either::Right(Either::Right(Either::Right(Either::Right(Either::Left(_))))) => {
-                Digit::Four
-            }
-            Either::Right(Either::Right(Either::Right(Either::Right(Either::Right(
-                Either::Left(_),
-            ))))) => Digit::Five,
-            Either::Right(Either::Right(Either::Right(Either::Right(Either::Right(
-                Either::Right(Either::Left(_)),
-            ))))) => Digit::Six,
-            Either::Right(Either::Right(Either::Right(Either::Right(Either::Right(
-                Either::Right(Either::Right(Either::Left(_))),
-            ))))) => Digit::Seven,
-            Either::Right(Either::Right(Either::Right(Either::Right(Either::Right(
-                Either::Right(Either::Right(Either::Right(Either::Left(_)))),
-            ))))) => Digit::Eight,
-            Either::Right(Either::Right(Either::Right(Either::Right(Either::Right(
-                Either::Right(Either::Right(Either::Right(Either::Right(_)))),
-            ))))) => Digit::Nine,
+            Either::Right(_) => Digit::Nine,
+            Either::Left(Either::Right(_)) => Digit::Eight,
+            Either::Left(Either::Left(Either::Right(_))) => Digit::Seven,
+            Either::Left(Either::Left(Either::Left(Either::Right(_)))) => Digit::Six,
+            Either::Left(Either::Left(Either::Left(Either::Left(Either::Right(_))))) => Digit::Five,
+            Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(
+                Either::Right(_),
+            ))))) => Digit::Four,
+            Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(
+                Either::Right(_),
+            )))))) => Digit::Three,
+            Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(
+                Either::Left(Either::Right(_)),
+            )))))) => Digit::Two,
+            Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(
+                Either::Left(Either::Left(Either::Right(_))),
+            )))))) => Digit::One,
+            Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(Either::Left(
+                Either::Left(Either::Left(Either::Left(_))),
+            )))))) => Digit::Zero,
         }
     }
 }

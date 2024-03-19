@@ -1,9 +1,6 @@
-use std::iter::Cloned;
 
-use super::{
-    and::{And2, AndParser},
-    ParseResult, Parser,
-};
+
+use super::{ParseResult, Parser};
 
 pub struct Many0<T>(T);
 
@@ -35,9 +32,7 @@ impl<T> Many0<T> {
     }
 }
 
-pub type Many1<T> = And2<T, Many0<T>>;
 
-pub type Many1ReturnType<T> = ParseResult<(T, Vec<T>)>;
 
 #[cfg(test)]
 mod test_many0 {
@@ -80,7 +75,7 @@ mod test_many0 {
 mod test_many1 {
     use crate::parser::{
         digit::{Digit, DigitParser},
-        many::{Many0, Many1},
+        many::Many0,
         Parser,
     };
 
@@ -88,7 +83,7 @@ mod test_many1 {
     fn should_have_atleast_one_digit() {
         let val = String::from("1abc");
         let digit_parser = DigitParser::default();
-        let res = Many1::new(digit_parser.clone(), Many0::new(digit_parser)).parse_from(&val);
+        let res = (digit_parser.clone(), Many0::new(digit_parser)).parse_from(&val);
         let digits = res.map(|((p, v), follow)| {
             (
                 vec![p]
@@ -107,7 +102,7 @@ mod test_many1 {
     fn should_err_if_no_digits_found() {
         let val = String::from("abc");
         let digit_parser = DigitParser::default();
-        let res = Many1::new(digit_parser.clone(), Many0::new(digit_parser)).parse_from(&val);
+        let res = (digit_parser.clone(), Many0::new(digit_parser)).parse_from(&val);
 
         assert_eq!(
             Err(String::from("Could not find token: 9")), //last token is 9

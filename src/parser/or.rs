@@ -26,14 +26,3 @@ impl<P1, P2> OrParser<P1, P2> {
         Self(p1, p2)
     }
 }
-
-pub type Or2<U, V> = OrParser<U, V>;
-pub type Or3<U, V, W> = Or2<U, Or2<V, W>>;
-pub type Or4<U, V, W, X> = Or2<U, Or3<V, W, X>>;
-pub type Or5<U, V, W, X, Y> = Or2<U, Or4<V, W, X, Y>>;
-pub type Or6<U, V, W, X, Y, Z> = Or2<U, Or5<V, W, X, Y, Z>>;
-pub type Or7<A, B, C, D, E, F, G> = Or2<A, Or6<B, C, D, E, F, G>>;
-pub type Or8<A, B, C, D, E, F, G, H> = Or2<A, Or7<B, C, D, E, F, G, H>>;
-pub type Or9<A, B, C, D, E, F, G, H, I> = Or2<A, Or8<B, C, D, E, F, G, H, I>>;
-pub type Or10<A, B, C, D, E, F, G, H, I, J> = Or2<A, Or9<B, C, D, E, F, G, H, I, J>>;
-// we don't have recursive types unless you use Box
