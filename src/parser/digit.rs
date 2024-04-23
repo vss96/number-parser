@@ -1,16 +1,8 @@
-
-
-
-
-
-
-
 use super::or::OrParser;
 use super::token::TokenParser;
 use super::Either;
 use super::OrOperator;
 use super::Parser;
-
 
 pub type DigitParser = OrParser<
     OrParser<

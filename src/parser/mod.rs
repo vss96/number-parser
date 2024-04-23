@@ -14,9 +14,9 @@ mod and;
 mod digit;
 mod many;
 mod map;
+mod operator;
 mod or;
 mod token;
-mod operator;
 
 pub use digit::{Digit, DigitParser};
 pub use many::Many0;
